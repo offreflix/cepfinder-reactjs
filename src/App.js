@@ -3,6 +3,7 @@ import './App.css';
 
 import Input from './components/Input';
 import Main from './components/Main';
+import Container from './components/Container';
 
 function App() {
   const [cep, setCep] = useState({});
@@ -12,13 +13,11 @@ function App() {
   }
 
   return (
-    <div className="container">
-      <h1 className="title">Buscador CEP</h1>
-
+    <Container>
       <Input handleCep={handleCep} />
 
-      {Object.keys(cep).length > 1 && <Main cep={cep} />}
-    </div>
+      <Main cep={cep} />
+    </Container>
   );
 }
 
