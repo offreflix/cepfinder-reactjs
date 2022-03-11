@@ -18,8 +18,11 @@
      <span>Node.js</span>
    </div>
   <hr/>
+  
+Caso queira [testar](cep-finder-reflix.netlify.app). 🔧<br>
+Made by João Victor. 😳 [My LinkedIn](https://www.linkedin.com/in/joão-victor-sabino-souto-576937222/)
+  
 </div>
-Caso queira [testar](cep-finder-reflix.netlify.app)
-Made by João Victor 😳 [My LinkedIn](https://www.linkedin.com/in/joão-victor-sabino-souto-576937222/)
+
 
 
