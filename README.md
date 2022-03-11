@@ -1,5 +1,4 @@
-<div align="center">
-<h1>Buscador de CEP</h1>
+
 
 <image src="https://user-images.githubusercontent.com/91212364/157893487-30e7bedc-318c-445e-88ec-9cce18707ccd.png" style="width:500px;"></image>
 
@@ -9,6 +8,7 @@ Ele foi criado para estudo, melhorar a separação de componentes e aprender à 
 
 ---
 
+<<<<<<< HEAD
 <h2>Tecnologias</h2>
 
 Foram utilizadas as seguintes tecnologias..
@@ -22,5 +22,6 @@ Foram utilizadas as seguintes tecnologias..
 ---
 
 Made by João Victor 😳 [My LinkedIn](https://www.linkedin.com/in/joão-victor-sabino-souto-576937222/)
+=======
+>>>>>>> 569e3bfc4cb5a4b7a7ab8b91364d1abac820fb9e
 
-</div>
