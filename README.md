@@ -11,7 +11,7 @@ Ele foi criado para estudo, melhorar a separação de componentes e aprender à 
 
 <h2>Tecnologias</h2>
 
-Foram utilizadas as seguintes tecnologias.
+Foram utilizadas as seguintes tecnologias..
 
 - [React.Js]
 - [Javascript]
