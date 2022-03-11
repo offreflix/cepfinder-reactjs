@@ -7,7 +7,7 @@
   Ele foi criado para estudo, melhorar a separação de componentes e aprender à consumir API com o Axios.
   </p>
   
----
+<hr/>
   <div>
     <h2>Tecnologias</h2>
     <p>Foram utilizadas as seguintes tecnologias.</p>
@@ -17,7 +17,7 @@
     <span>Axios</span><br>
     <span>Node.js</span>
   </div>
----
+<hr/>
 
 Made by João Victor 😳 [My LinkedIn](https://www.linkedin.com/in/joão-victor-sabino-souto-576937222/)
 
