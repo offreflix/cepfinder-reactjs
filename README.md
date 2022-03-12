@@ -19,7 +19,7 @@
    </div>
   <hr/>
   
-Caso queira [testar](https://www.cep-finder-reflix.netlify.app). 🔧<br>
+Caso queira [testar](https://cep-finder-reflix.netlify.app). 🔧<br>
 Made by João Victor. 😳 [My LinkedIn](https://www.linkedin.com/in/joão-victor-sabino-souto-576937222/)
   
 </div>
