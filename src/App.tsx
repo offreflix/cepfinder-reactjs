@@ -4,12 +4,13 @@ import './App.css';
 import Input from './components/Input';
 import Main from './components/Main';
 import Container from './components/Container';
+import { CepData } from './types';
 
 function App() {
-  const [cep, setCep] = useState(null);
+  const [cep, setCep] = useState<CepData | null>(null);
 
-  function handleCep(input) {
-    setCep(input);
+  function handleCep(data: CepData) {
+    setCep(data);
   }
 
   return (

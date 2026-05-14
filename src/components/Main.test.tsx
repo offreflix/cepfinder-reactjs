@@ -1,12 +1,18 @@
 import { render, screen } from '@testing-library/react';
 import Main from './Main';
+import { CepData } from '../types';
 
-const validCep = {
+const validCep: CepData = {
   cep: '01001-000',
   logradouro: 'Praça da Sé',
+  complemento: '',
   bairro: 'Sé',
   localidade: 'São Paulo',
   uf: 'SP',
+  ibge: '3550308',
+  gia: '1004',
+  ddd: '11',
+  siafi: '7107',
 };
 
 describe('Main', () => {

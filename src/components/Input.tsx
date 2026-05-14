@@ -2,8 +2,13 @@ import { useState } from 'react';
 import { FiSearch, FiLoader } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 import api from '../services/api';
+import { CepData } from '../types';
 
-function Input(props) {
+interface InputProps {
+  handleCep: (data: CepData) => void;
+}
+
+function Input({ handleCep }: InputProps) {
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,10 +22,10 @@ function Input(props) {
     setError('');
     setLoading(true);
     try {
-      const response = await api.get(`${input}/json`);
+      const response = await api.get<CepData | { erro: true }>(`${input}/json`);
       setInput('');
-      if (!response.data.erro) {
-        props.handleCep(response.data);
+      if (!('erro' in response.data)) {
+        handleCep(response.data);
       } else {
         Swal.fire({
           title: 'O CEP que você inseriu não existe',
