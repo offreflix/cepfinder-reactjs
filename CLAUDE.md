@@ -12,6 +12,9 @@ pnpm test        # Vitest run (single pass)
 pnpm test:watch  # Vitest in watch mode
 pnpm lint        # ESLint
 pnpm format      # Prettier (src/**/*.{ts,tsx,css})
+
+# Run a single test file
+pnpm test src/components/Input.test.tsx
 ```
 
 ## Architecture
@@ -24,6 +27,10 @@ CEP Finder is a single-page React app that looks up Brazilian postal codes via t
 3. `App` holds the single `cep` state object and passes it down to `Main` for display.
 4. When ViaCEP returns `{ erro: true }`, `Input` fires a SweetAlert2 error dialog.
 
-**Stack:** React 18, Axios 1.x, react-icons (Feather), sweetalert2, Vite 6, TypeScript 5, Vitest. No router, no state management library.
+**Shared types:** `src/types.ts` exports the `CepData` interface — the shape returned by ViaCEP and passed between all components.
+
+**Stack:** React 18, Axios 1.x, react-icons (Feather), sweetalert2, Vite 6, TypeScript 5, Vitest + Testing Library. No router, no state management library.
+
+**Test setup:** `src/setupTests.ts` extends Vitest's `expect` with `jest-axe` matchers (`toHaveNoViolations`). Tests mock `../services/api` and `sweetalert2` via `vi.mock`.
 
 **Tooling:** ESLint 9 flat config (`eslint.config.js`), Prettier (`.prettierrc`).
