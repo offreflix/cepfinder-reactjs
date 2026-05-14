@@ -5,39 +5,46 @@ import { verification } from '../actions/inputActions';
 
 function Input(props) {
   const [input, setInput] = useState('');
+  const [error, setError] = useState('');
 
   async function handleSearch() {
     if (input === '') {
-      console.log('Insira um CEP!');
+      setError('Insira um CEP!');
       return;
     }
 
+    setError('');
     try {
       const response = await api.get(`${input}/json`);
-      props.handleCep(response.data);
       setInput('');
-      verification(response);
+      if (Object.keys(response.data).length > 1) {
+        props.handleCep(response.data);
+      } else {
+        verification(response);
+      }
     } catch (err) {
-      console.log(err);
+      setError('Erro ao buscar o CEP. Verifique sua conexão.');
       setInput('');
     }
   }
 
   return (
-    <div className="containerInput">
-      <input
-        type="text"
-        placeholder="Digite o CEP..."
-        value={input}
-        onChange={(e) => {
-          setInput(e.target.value);
-        }}
-      />
-
-      <button className="buttonSearch" onClick={handleSearch}>
-        <FiSearch size={25} color={'#FFF'} />
-      </button>
-    </div>
+    <>
+      <div className="containerInput">
+        <input
+          type="text"
+          placeholder="Digite o CEP..."
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+          }}
+        />
+        <button className="buttonSearch" onClick={handleSearch}>
+          <FiSearch size={25} color={'#FFF'} />
+        </button>
+      </div>
+      {error && <p className="errorMessage">{error}</p>}
+    </>
   );
 }
 

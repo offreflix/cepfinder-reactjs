@@ -34,6 +34,14 @@ describe('Input', () => {
     expect(handleCep).not.toHaveBeenCalled();
   });
 
+  it('shows error message when input is empty', async () => {
+    render(<Input handleCep={handleCep} />);
+    fireEvent.click(screen.getByRole('button'));
+    await waitFor(() =>
+      expect(screen.getByText('Insira um CEP!')).toBeInTheDocument()
+    );
+  });
+
   it('calls the API with the typed CEP and passes data to handleCep', async () => {
     api.get.mockResolvedValue({ data: validData });
     render(<Input handleCep={handleCep} />);
@@ -70,5 +78,21 @@ describe('Input', () => {
 
     await waitFor(() => expect(input.value).toBe(''));
     expect(handleCep).not.toHaveBeenCalled();
+  });
+
+  it('shows error message when the API call fails', async () => {
+    api.get.mockRejectedValue(new Error('Network error'));
+    render(<Input handleCep={handleCep} />);
+
+    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+      target: { value: '00000000' },
+    });
+    fireEvent.click(screen.getByRole('button'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('Erro ao buscar o CEP. Verifique sua conexão.')
+      ).toBeInTheDocument()
+    );
   });
 });
