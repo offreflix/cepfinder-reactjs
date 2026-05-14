@@ -143,6 +143,50 @@ describe('Input', () => {
     await waitFor(() => expect(handleCep).toHaveBeenCalledWith(validData))
   })
 
+  it('formats CEP with dash after 5th digit while typing', () => {
+    render(<Input handleCep={handleCep} />)
+    const input = screen.getByPlaceholderText('00000-000') as HTMLInputElement
+
+    fireEvent.change(input, { target: { value: '01001000' } })
+    expect(input.value).toBe('01001-000')
+  })
+
+  it('does not add dash before the 6th digit', () => {
+    render(<Input handleCep={handleCep} />)
+    const input = screen.getByPlaceholderText('00000-000') as HTMLInputElement
+
+    fireEvent.change(input, { target: { value: '01001' } })
+    expect(input.value).toBe('01001')
+  })
+
+  it('strips non-numeric characters from input', () => {
+    render(<Input handleCep={handleCep} />)
+    const input = screen.getByPlaceholderText('00000-000') as HTMLInputElement
+
+    fireEvent.change(input, { target: { value: 'abc01001xyz000' } })
+    expect(input.value).toBe('01001-000')
+  })
+
+  it('limits input to 8 digits (9 chars with dash)', () => {
+    render(<Input handleCep={handleCep} />)
+    const input = screen.getByPlaceholderText('00000-000') as HTMLInputElement
+
+    fireEvent.change(input, { target: { value: '010010001234' } })
+    expect(input.value).toBe('01001-000')
+  })
+
+  it('calls the API without the dash', async () => {
+    mockGet.mockResolvedValue({ data: validData } as AxiosResponse<CepData>)
+    render(<Input handleCep={handleCep} />)
+
+    fireEvent.change(screen.getByPlaceholderText('00000-000'), {
+      target: { value: '01001-000' },
+    })
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => expect(mockGet).toHaveBeenCalledWith('01001000/json'))
+  })
+
   it('has no accessibility violations', async () => {
     const { container } = render(<Input handleCep={handleCep} />)
     expect(await axe(container)).toHaveNoViolations()

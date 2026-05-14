@@ -8,6 +8,12 @@ interface InputProps {
   handleCep: (data: CepData) => void;
 }
 
+function formatCep(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 8);
+  if (digits.length > 5) return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+  return digits;
+}
+
 function Input({ handleCep }: InputProps) {
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
@@ -22,7 +28,7 @@ function Input({ handleCep }: InputProps) {
     setError('');
     setLoading(true);
     try {
-      const response = await api.get<CepData | { erro: true }>(`${input}/json`);
+      const response = await api.get<CepData | { erro: true }>(`${input.replace('-', '')}/json`);
       setInput('');
       if (!('erro' in response.data)) {
         handleCep(response.data);
@@ -56,7 +62,7 @@ function Input({ handleCep }: InputProps) {
           type="text"
           placeholder="00000-000"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => setInput(formatCep(e.target.value))}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           maxLength={9}
         />
