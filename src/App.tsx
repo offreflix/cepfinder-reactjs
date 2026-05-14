@@ -4,6 +4,7 @@ import './App.css'
 import Input from './components/Input'
 import Main from './components/Main'
 import Container from './components/Container'
+import InfoSection from './components/InfoSection'
 import { CepData } from './types'
 
 function App() {
@@ -14,11 +15,13 @@ function App() {
   }
 
   return (
-    <Container>
-      <Input handleCep={handleCep} />
-
-      <Main cep={cep} />
-    </Container>
+    <>
+      <Container>
+        <Input handleCep={handleCep} />
+        <Main cep={cep} />
+      </Container>
+      <InfoSection />
+    </>
   )
 }
 
