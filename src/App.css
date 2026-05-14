@@ -1,5 +1,14 @@
 /* ── Layout ───────────────────────────────────────────────── */
 
+@keyframes gridDrift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 60px 60px;
+  }
+}
+
 .container {
   min-height: 100vh;
   display: flex;
@@ -26,6 +35,7 @@
       var(--gold-faint) 59px,
       var(--gold-faint) 60px
     );
+  animation: gridDrift 2s linear infinite;
 }
 
 /* radial vignette overlay */
