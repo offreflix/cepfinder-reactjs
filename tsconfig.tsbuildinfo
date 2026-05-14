@@ -1,0 +1,1 @@
+{"root":["./src/app.test.tsx","./src/app.tsx","./src/declarations.d.ts","./src/index.tsx","./src/setuptests.ts","./src/types.ts","./src/components/container.test.tsx","./src/components/container.tsx","./src/components/input.test.tsx","./src/components/input.tsx","./src/components/main.test.tsx","./src/components/main.tsx","./src/services/api.ts"],"errors":true,"version":"5.9.3"}
