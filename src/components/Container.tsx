@@ -7,7 +7,16 @@ interface ContainerProps {
 function Container({ children }: ContainerProps) {
   return (
     <div className="container">
-      <h1 className="title">Buscador de CEP</h1>
+      <div className="titleBlock">
+        <div className="titleDecor">✦ República Federativa do Brasil ✦</div>
+        <div className="titleRule">
+          <span className="titleRuleDiamond">◆</span>
+        </div>
+        <h1 className="title">
+          Buscador de <em>CEP</em>
+        </h1>
+        <p className="subtitle">Sistema de Localização Postal Brasileiro</p>
+      </div>
 
       {children}
     </div>

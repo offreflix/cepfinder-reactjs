@@ -1,5 +1,33 @@
-* {
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Courier+Prime:wght@400;700&display=swap');
+
+:root {
+  --bg: #0A0907;
+  --bg-card: #1A1612;
+  --bg-input: #130F0C;
+  --gold: #C8A96E;
+  --gold-bright: #D4B97A;
+  --gold-dim: rgba(200, 169, 110, 0.22);
+  --gold-faint: rgba(200, 169, 110, 0.055);
+  --cream: #EDE5D5;
+  --cream-dim: #9B8E7D;
+  --muted: #4A4037;
+  --error: #C85A45;
+  --border: rgba(200, 169, 110, 0.16);
+  --border-bright: rgba(200, 169, 110, 0.35);
+}
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

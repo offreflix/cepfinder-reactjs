@@ -15,7 +15,7 @@ function Input({ handleCep }: InputProps) {
 
   async function handleSearch() {
     if (input === '') {
-      setError('Insira um CEP!');
+      setError('Insira um CEP válido.');
       return;
     }
 
@@ -28,13 +28,17 @@ function Input({ handleCep }: InputProps) {
         handleCep(response.data);
       } else {
         Swal.fire({
-          title: 'O CEP que você inseriu não existe',
-          text: 'Cheque se digitou errado e tente novamente',
+          title: 'CEP não encontrado',
+          text: 'Verifique o código e tente novamente.',
           icon: 'error',
+          background: '#1A1612',
+          color: '#EDE5D5',
+          iconColor: '#C85A45',
+          confirmButtonColor: '#C8A96E',
         });
       }
     } catch {
-      setError('Erro ao buscar o CEP. Verifique sua conexão.');
+      setError('Erro de conexão. Tente novamente.');
       setInput('');
     } finally {
       setLoading(false);
@@ -42,16 +46,19 @@ function Input({ handleCep }: InputProps) {
   }
 
   return (
-    <>
+    <div className="searchSection">
+      <label htmlFor="cep-input" className="searchLabel">
+        Código Postal
+      </label>
       <div className="containerInput">
-        <label htmlFor="cep-input" className="srOnly">CEP</label>
         <input
           id="cep-input"
           type="text"
-          placeholder="Digite o CEP..."
+          placeholder="00000-000"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          maxLength={9}
         />
         <button
           className="buttonSearch"
@@ -60,13 +67,13 @@ function Input({ handleCep }: InputProps) {
           aria-label="Buscar CEP"
         >
           {loading
-            ? <FiLoader size={25} color={'#FFF'} className="spinIcon" />
-            : <FiSearch size={25} color={'#FFF'} />
+            ? <FiLoader size={20} className="spinIcon" />
+            : <FiSearch size={20} />
           }
         </button>
       </div>
       {error && <p className="errorMessage">{error}</p>}
-    </>
+    </div>
   );
 }
 
