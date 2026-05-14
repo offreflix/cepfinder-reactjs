@@ -95,4 +95,34 @@ describe('Input', () => {
       ).toBeInTheDocument()
     );
   });
+
+  it('disables the button while the request is in flight', async () => {
+    api.get.mockReturnValue(new Promise(() => {}));
+    render(<Input handleCep={handleCep} />);
+
+    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+      target: { value: '01001000' },
+    });
+    fireEvent.click(screen.getByRole('button'));
+
+    await waitFor(() =>
+      expect(screen.getByRole('button')).toBeDisabled()
+    );
+  });
+
+  it('triggers search when Enter is pressed in the input', async () => {
+    api.get.mockResolvedValue({ data: validData });
+    render(<Input handleCep={handleCep} />);
+
+    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+      target: { value: '01001000' },
+    });
+    fireEvent.keyDown(screen.getByPlaceholderText('Digite o CEP...'), {
+      key: 'Enter',
+    });
+
+    await waitFor(() =>
+      expect(handleCep).toHaveBeenCalledWith(validData)
+    );
+  });
 });
