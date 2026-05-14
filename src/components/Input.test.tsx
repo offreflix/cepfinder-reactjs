@@ -82,7 +82,7 @@ describe('Input', () => {
     mockGet.mockResolvedValue({ data: validData } as any);
     render(<Input handleCep={handleCep} />);
 
-    const input = screen.getByPlaceholderText('Digite o CEP...');
+    const input = screen.getByPlaceholderText('Digite o CEP...') as HTMLInputElement;
     fireEvent.change(input, { target: { value: '01001000' } });
     fireEvent.click(screen.getByRole('button'));
 
@@ -93,7 +93,7 @@ describe('Input', () => {
     mockGet.mockRejectedValue(new Error('Network error'));
     render(<Input handleCep={handleCep} />);
 
-    const input = screen.getByPlaceholderText('Digite o CEP...');
+    const input = screen.getByPlaceholderText('Digite o CEP...') as HTMLInputElement;
     fireEvent.change(input, { target: { value: '00000000' } });
     fireEvent.click(screen.getByRole('button'));
 
