@@ -5,9 +5,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm start        # Dev server at http://localhost:3000
-npm run build    # Production build
-npm test         # Jest in interactive watch mode
+pnpm dev         # Dev server at http://localhost:5173
+pnpm build       # Type-check + production build (tsc -b && vite build)
+pnpm preview     # Preview production build locally
+pnpm test        # Vitest run (single pass)
+pnpm test:watch  # Vitest in watch mode
+pnpm lint        # ESLint
+pnpm format      # Prettier (src/**/*.{ts,tsx,css})
 ```
 
 ## Architecture
@@ -15,9 +19,11 @@ npm test         # Jest in interactive watch mode
 CEP Finder is a single-page React app that looks up Brazilian postal codes via the [ViaCEP](https://viacep.com.br) public API.
 
 **Data flow:**
-1. `Input.js` owns the text field state and makes the API call (`src/services/api.js` — pre-configured Axios instance with `baseURL: 'https://viacep.com.br/ws/'`).
+1. `Input.tsx` owns the text field state and makes the API call (`src/services/api.ts` — pre-configured Axios instance with `baseURL: 'https://viacep.com.br/ws/'`).
 2. On success, `Input` calls `props.handleCep(response.data)` to lift the result up to `App`.
 3. `App` holds the single `cep` state object and passes it down to `Main` for display.
-4. After the API call, `Input` also runs `verification(response)` from `src/actions/inputActions.js`, which triggers a sweetalert error dialog when ViaCEP returns an object with only one key (the `erro` field — meaning an invalid CEP).
+4. When ViaCEP returns `{ erro: true }`, `Input` fires a SweetAlert2 error dialog.
 
-**Stack:** React 17, Axios, react-icons (Feather), sweetalert, Create React App (react-scripts 5). No TypeScript, no router, no state management library.
+**Stack:** React 18, Axios 1.x, react-icons (Feather), sweetalert2, Vite 6, TypeScript 5, Vitest. No router, no state management library.
+
+**Tooling:** ESLint 9 flat config (`eslint.config.js`), Prettier (`.prettierrc`).
