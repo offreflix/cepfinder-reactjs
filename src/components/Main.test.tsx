@@ -24,10 +24,11 @@ describe('Main', () => {
 
   it('renders address data for a valid CEP', () => {
     render(<Main cep={validCep} />);
-    expect(screen.getByText('CEP: 01001-000')).toBeInTheDocument();
+    expect(screen.getByText('01001-000')).toBeInTheDocument();
     expect(screen.getByText('Praça da Sé')).toBeInTheDocument();
     expect(screen.getByText('Sé')).toBeInTheDocument();
-    expect(screen.getByText('São Paulo - SP')).toBeInTheDocument();
+    expect(screen.getByText('São Paulo')).toBeInTheDocument();
+    expect(screen.getByText('SP')).toBeInTheDocument();
   });
 
   it('has no accessibility violations when displaying address data', async () => {

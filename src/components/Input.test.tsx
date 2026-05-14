@@ -32,7 +32,7 @@ describe('Input', () => {
 
   it('renders the text input and search button', () => {
     render(<Input handleCep={handleCep} />)
-    expect(screen.getByPlaceholderText('Digite o CEP...')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('00000-000')).toBeInTheDocument()
     expect(screen.getByRole('button')).toBeInTheDocument()
   })
 
@@ -46,14 +46,14 @@ describe('Input', () => {
   it('shows error message when input is empty', async () => {
     render(<Input handleCep={handleCep} />)
     fireEvent.click(screen.getByRole('button'))
-    await screen.findByText('Insira um CEP!')
+    await screen.findByText('Insira um CEP válido.')
   })
 
   it('calls the API with the typed CEP and passes data to handleCep', async () => {
     mockGet.mockResolvedValue({ data: validData } as AxiosResponse<CepData>)
     render(<Input handleCep={handleCep} />)
 
-    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+    fireEvent.change(screen.getByPlaceholderText('00000-000'), {
       target: { value: '01001000' },
     })
     fireEvent.click(screen.getByRole('button'))
@@ -66,17 +66,18 @@ describe('Input', () => {
     mockGet.mockResolvedValue({ data: { erro: true } } as AxiosResponse<{ erro: true }>)
     render(<Input handleCep={handleCep} />)
 
-    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+    fireEvent.change(screen.getByPlaceholderText('00000-000'), {
       target: { value: '00000000' },
     })
     fireEvent.click(screen.getByRole('button'))
 
     await waitFor(() =>
-      expect(mockFire).toHaveBeenCalledWith({
-        title: 'O CEP que você inseriu não existe',
-        text: 'Cheque se digitou errado e tente novamente',
-        icon: 'error',
-      })
+      expect(mockFire).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: 'CEP não encontrado',
+          icon: 'error',
+        })
+      )
     )
     expect(handleCep).not.toHaveBeenCalled()
   })
@@ -85,7 +86,7 @@ describe('Input', () => {
     mockGet.mockResolvedValue({ data: validData } as AxiosResponse<CepData>)
     render(<Input handleCep={handleCep} />)
 
-    const input = screen.getByPlaceholderText('Digite o CEP...') as HTMLInputElement
+    const input = screen.getByPlaceholderText('00000-000') as HTMLInputElement
     fireEvent.change(input, { target: { value: '01001000' } })
     fireEvent.click(screen.getByRole('button'))
 
@@ -96,7 +97,7 @@ describe('Input', () => {
     mockGet.mockRejectedValue(new Error('Network error'))
     render(<Input handleCep={handleCep} />)
 
-    const input = screen.getByPlaceholderText('Digite o CEP...') as HTMLInputElement
+    const input = screen.getByPlaceholderText('00000-000') as HTMLInputElement
     fireEvent.change(input, { target: { value: '00000000' } })
     fireEvent.click(screen.getByRole('button'))
 
@@ -108,19 +109,19 @@ describe('Input', () => {
     mockGet.mockRejectedValue(new Error('Network error'))
     render(<Input handleCep={handleCep} />)
 
-    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+    fireEvent.change(screen.getByPlaceholderText('00000-000'), {
       target: { value: '00000000' },
     })
     fireEvent.click(screen.getByRole('button'))
 
-    await screen.findByText('Erro ao buscar o CEP. Verifique sua conexão.')
+    await screen.findByText('Erro de conexão. Tente novamente.')
   })
 
   it('disables the button while the request is in flight', async () => {
     mockGet.mockReturnValue(new Promise(() => {}))
     render(<Input handleCep={handleCep} />)
 
-    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+    fireEvent.change(screen.getByPlaceholderText('00000-000'), {
       target: { value: '01001000' },
     })
     fireEvent.click(screen.getByRole('button'))
@@ -132,10 +133,10 @@ describe('Input', () => {
     mockGet.mockResolvedValue({ data: validData } as AxiosResponse<CepData>)
     render(<Input handleCep={handleCep} />)
 
-    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+    fireEvent.change(screen.getByPlaceholderText('00000-000'), {
       target: { value: '01001000' },
     })
-    fireEvent.keyDown(screen.getByPlaceholderText('Digite o CEP...'), {
+    fireEvent.keyDown(screen.getByPlaceholderText('00000-000'), {
       key: 'Enter',
     })
 

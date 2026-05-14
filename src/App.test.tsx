@@ -25,8 +25,8 @@ describe('App', () => {
 
   it('renders the title and search input', () => {
     render(<App />)
-    expect(screen.getByText('Buscador de CEP')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Digite o CEP...')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('00000-000')).toBeInTheDocument()
   })
 
   it('does not show results before any search', () => {
@@ -38,14 +38,15 @@ describe('App', () => {
     mockGet.mockResolvedValue({ data: validData } as AxiosResponse<CepData>)
     render(<App />)
 
-    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+    fireEvent.change(screen.getByPlaceholderText('00000-000'), {
       target: { value: '01001000' },
     })
     fireEvent.click(screen.getByRole('button'))
 
     await waitFor(() => {
-      expect(screen.getByText('CEP: 01001-000')).toBeInTheDocument()
-      expect(screen.getByText('São Paulo - SP')).toBeInTheDocument()
+      expect(screen.getByText('01001-000')).toBeInTheDocument()
+      expect(screen.getByText('São Paulo')).toBeInTheDocument()
+      expect(screen.getByText('SP')).toBeInTheDocument()
     })
   })
 
@@ -56,7 +57,7 @@ describe('App', () => {
     mockGet.mockResolvedValue({ data: { erro: true } } as AxiosResponse<{ erro: true }>)
     render(<App />)
 
-    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+    fireEvent.change(screen.getByPlaceholderText('00000-000'), {
       target: { value: '00000000' },
     })
     fireEvent.click(screen.getByRole('button'))

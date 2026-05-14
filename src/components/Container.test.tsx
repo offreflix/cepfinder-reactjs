@@ -4,7 +4,8 @@ import Container from './Container';
 describe('Container', () => {
   it('renders the app title', () => {
     render(<Container />);
-    expect(screen.getByText('Buscador de CEP')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
+    expect(screen.getByText('CEP')).toBeInTheDocument();
   });
 
   it('renders children', () => {
