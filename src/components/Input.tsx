@@ -33,7 +33,7 @@ function Input({ handleCep }: InputProps) {
           icon: 'error',
         });
       }
-    } catch (err) {
+    } catch {
       setError('Erro ao buscar o CEP. Verifique sua conexão.');
       setInput('');
     } finally {

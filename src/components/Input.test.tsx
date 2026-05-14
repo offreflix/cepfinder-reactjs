@@ -1,5 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
+import { axe } from 'jest-axe'
+import type { AxiosResponse } from 'axios'
 import Input from './Input'
 import api from '../services/api'
 import Swal from 'sweetalert2'
@@ -8,8 +10,8 @@ import { CepData } from '../types'
 vi.mock('../services/api')
 vi.mock('sweetalert2', () => ({ default: { fire: vi.fn() } }))
 
-const mockGet = api.get as ReturnType<typeof vi.fn>
-const mockFire = Swal.fire as ReturnType<typeof vi.fn>
+const mockGet = vi.mocked(api.get)
+const mockFire = vi.mocked(Swal.fire)
 
 const validData = {
   cep: '01001-000',
@@ -48,7 +50,7 @@ describe('Input', () => {
   })
 
   it('calls the API with the typed CEP and passes data to handleCep', async () => {
-    mockGet.mockResolvedValue({ data: validData } as any)
+    mockGet.mockResolvedValue({ data: validData } as AxiosResponse<CepData>)
     render(<Input handleCep={handleCep} />)
 
     fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
@@ -61,7 +63,7 @@ describe('Input', () => {
   })
 
   it('shows error alert and does not call handleCep for invalid CEP', async () => {
-    mockGet.mockResolvedValue({ data: { erro: true } } as any)
+    mockGet.mockResolvedValue({ data: { erro: true } } as AxiosResponse<{ erro: true }>)
     render(<Input handleCep={handleCep} />)
 
     fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
@@ -80,7 +82,7 @@ describe('Input', () => {
   })
 
   it('clears the input field after a successful search', async () => {
-    mockGet.mockResolvedValue({ data: validData } as any)
+    mockGet.mockResolvedValue({ data: validData } as AxiosResponse<CepData>)
     render(<Input handleCep={handleCep} />)
 
     const input = screen.getByPlaceholderText('Digite o CEP...') as HTMLInputElement
@@ -127,7 +129,7 @@ describe('Input', () => {
   })
 
   it('triggers search when Enter is pressed in the input', async () => {
-    mockGet.mockResolvedValue({ data: validData } as any)
+    mockGet.mockResolvedValue({ data: validData } as AxiosResponse<CepData>)
     render(<Input handleCep={handleCep} />)
 
     fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
@@ -138,5 +140,10 @@ describe('Input', () => {
     })
 
     await waitFor(() => expect(handleCep).toHaveBeenCalledWith(validData))
+  })
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<Input handleCep={handleCep} />)
+    expect(await axe(container)).toHaveNoViolations()
   })
 })

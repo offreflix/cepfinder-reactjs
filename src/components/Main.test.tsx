@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 import Main from './Main';
 import { CepData } from '../types';
 
@@ -27,5 +28,10 @@ describe('Main', () => {
     expect(screen.getByText('Praça da Sé')).toBeInTheDocument();
     expect(screen.getByText('Sé')).toBeInTheDocument();
     expect(screen.getByText('São Paulo - SP')).toBeInTheDocument();
+  });
+
+  it('has no accessibility violations when displaying address data', async () => {
+    const { container } = render(<Main cep={validCep} />);
+    expect(await axe(container)).toHaveNoViolations();
   });
 });
