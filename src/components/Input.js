@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FiSearch, FiLoader } from 'react-icons/fi';
+import Swal from 'sweetalert2';
 import api from '../services/api';
-import { verification } from '../actions/inputActions';
 
 function Input(props) {
   const [input, setInput] = useState('');
@@ -19,10 +19,14 @@ function Input(props) {
     try {
       const response = await api.get(`${input}/json`);
       setInput('');
-      if (Object.keys(response.data).length > 1) {
+      if (!response.data.erro) {
         props.handleCep(response.data);
       } else {
-        verification(response);
+        Swal.fire({
+          title: 'O CEP que você inseriu não existe',
+          text: 'Cheque se digitou errado e tente novamente',
+          icon: 'error',
+        });
       }
     } catch (err) {
       setError('Erro ao buscar o CEP. Verifique sua conexão.');

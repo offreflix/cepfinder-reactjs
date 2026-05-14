@@ -10,14 +10,9 @@ const validCep = {
 };
 
 describe('Main', () => {
-  it('renders nothing when cep is empty', () => {
-    const { container } = render(<Main cep={{}} />);
-    expect(container.querySelector('.main')).toBeNull();
-  });
-
-  it('renders nothing when cep has only one key (invalid)', () => {
-    const { container } = render(<Main cep={{ erro: true }} />);
-    expect(container.querySelector('.main')).toBeNull();
+  it('renders nothing when cep is null', () => {
+    render(<Main cep={null} />);
+    expect(screen.queryByRole('main')).toBeNull();
   });
 
   it('renders address data for a valid CEP', () => {

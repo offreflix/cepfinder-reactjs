@@ -3,7 +3,7 @@ import App from './App';
 import api from './services/api';
 
 jest.mock('./services/api');
-jest.mock('./actions/inputActions', () => ({ verification: jest.fn() }));
+jest.mock('sweetalert2', () => ({ fire: jest.fn() }));
 
 const validData = {
   cep: '01001-000',

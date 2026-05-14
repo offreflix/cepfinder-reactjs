@@ -1,9 +1,10 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Input from './Input';
-import api from '../services/api';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import Input from './Input'
+import api from '../services/api'
+import Swal from 'sweetalert2'
 
-jest.mock('../services/api');
-jest.mock('../actions/inputActions', () => ({ verification: jest.fn() }));
+jest.mock('../services/api')
+jest.mock('sweetalert2', () => ({ fire: jest.fn() }))
 
 const validData = {
   cep: '01001-000',
@@ -11,118 +12,126 @@ const validData = {
   bairro: 'Sé',
   localidade: 'São Paulo',
   uf: 'SP',
-};
+}
 
 describe('Input', () => {
-  let handleCep;
+  let handleCep
 
   beforeEach(() => {
-    handleCep = jest.fn();
-    api.get.mockReset();
-  });
+    handleCep = jest.fn()
+    api.get.mockReset()
+    Swal.fire.mockClear()
+  })
 
   it('renders the text input and search button', () => {
-    render(<Input handleCep={handleCep} />);
-    expect(screen.getByPlaceholderText('Digite o CEP...')).toBeInTheDocument();
-    expect(screen.getByRole('button')).toBeInTheDocument();
-  });
+    render(<Input handleCep={handleCep} />)
+    expect(screen.getByPlaceholderText('Digite o CEP...')).toBeInTheDocument()
+    expect(screen.getByRole('button')).toBeInTheDocument()
+  })
 
   it('does not call the API when input is empty', async () => {
-    render(<Input handleCep={handleCep} />);
-    fireEvent.click(screen.getByRole('button'));
-    await waitFor(() => expect(api.get).not.toHaveBeenCalled());
-    expect(handleCep).not.toHaveBeenCalled();
-  });
+    render(<Input handleCep={handleCep} />)
+    fireEvent.click(screen.getByRole('button'))
+    await waitFor(() => expect(api.get).not.toHaveBeenCalled())
+    expect(handleCep).not.toHaveBeenCalled()
+  })
 
   it('shows error message when input is empty', async () => {
-    render(<Input handleCep={handleCep} />);
-    fireEvent.click(screen.getByRole('button'));
-    await waitFor(() =>
-      expect(screen.getByText('Insira um CEP!')).toBeInTheDocument()
-    );
-  });
+    render(<Input handleCep={handleCep} />)
+    fireEvent.click(screen.getByRole('button'))
+    await screen.findByText('Insira um CEP!')
+  })
 
   it('calls the API with the typed CEP and passes data to handleCep', async () => {
-    api.get.mockResolvedValue({ data: validData });
-    render(<Input handleCep={handleCep} />);
+    api.get.mockResolvedValue({ data: validData })
+    render(<Input handleCep={handleCep} />)
 
     fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
       target: { value: '01001000' },
-    });
-    fireEvent.click(screen.getByRole('button'));
+    })
+    fireEvent.click(screen.getByRole('button'))
 
-    await waitFor(() => {
-      expect(api.get).toHaveBeenCalledWith('01001000/json');
-      expect(handleCep).toHaveBeenCalledWith(validData);
-    });
-  });
+    await waitFor(() => expect(handleCep).toHaveBeenCalledWith(validData))
+    expect(api.get).toHaveBeenCalledWith('01001000/json')
+  })
 
-  it('clears the input field after a successful search', async () => {
-    api.get.mockResolvedValue({ data: validData });
-    render(<Input handleCep={handleCep} />);
-
-    const input = screen.getByPlaceholderText('Digite o CEP...');
-    fireEvent.change(input, { target: { value: '01001000' } });
-    fireEvent.click(screen.getByRole('button'));
-
-    await waitFor(() => expect(input.value).toBe(''));
-  });
-
-  it('clears the input and does not throw when the API call fails', async () => {
-    api.get.mockRejectedValue(new Error('Network error'));
-    render(<Input handleCep={handleCep} />);
-
-    const input = screen.getByPlaceholderText('Digite o CEP...');
-    fireEvent.change(input, { target: { value: '00000000' } });
-    fireEvent.click(screen.getByRole('button'));
-
-    await waitFor(() => expect(input.value).toBe(''));
-    expect(handleCep).not.toHaveBeenCalled();
-  });
-
-  it('shows error message when the API call fails', async () => {
-    api.get.mockRejectedValue(new Error('Network error'));
-    render(<Input handleCep={handleCep} />);
+  it('shows error alert and does not call handleCep for invalid CEP', async () => {
+    api.get.mockResolvedValue({ data: { erro: true } })
+    render(<Input handleCep={handleCep} />)
 
     fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
       target: { value: '00000000' },
-    });
-    fireEvent.click(screen.getByRole('button'));
+    })
+    fireEvent.click(screen.getByRole('button'))
 
     await waitFor(() =>
-      expect(
-        screen.getByText('Erro ao buscar o CEP. Verifique sua conexão.')
-      ).toBeInTheDocument()
-    );
-  });
+      expect(Swal.fire).toHaveBeenCalledWith({
+        title: 'O CEP que você inseriu não existe',
+        text: 'Cheque se digitou errado e tente novamente',
+        icon: 'error',
+      }),
+    )
+    expect(handleCep).not.toHaveBeenCalled()
+  })
+
+  it('clears the input field after a successful search', async () => {
+    api.get.mockResolvedValue({ data: validData })
+    render(<Input handleCep={handleCep} />)
+
+    const input = screen.getByPlaceholderText('Digite o CEP...')
+    fireEvent.change(input, { target: { value: '01001000' } })
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => expect(input.value).toBe(''))
+  })
+
+  it('clears the input and does not throw when the API call fails', async () => {
+    api.get.mockRejectedValue(new Error('Network error'))
+    render(<Input handleCep={handleCep} />)
+
+    const input = screen.getByPlaceholderText('Digite o CEP...')
+    fireEvent.change(input, { target: { value: '00000000' } })
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => expect(input.value).toBe(''))
+    expect(handleCep).not.toHaveBeenCalled()
+  })
+
+  it('shows error message when the API call fails', async () => {
+    api.get.mockRejectedValue(new Error('Network error'))
+    render(<Input handleCep={handleCep} />)
+
+    fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
+      target: { value: '00000000' },
+    })
+    fireEvent.click(screen.getByRole('button'))
+
+    await screen.findByText('Erro ao buscar o CEP. Verifique sua conexão.')
+  })
 
   it('disables the button while the request is in flight', async () => {
-    api.get.mockReturnValue(new Promise(() => {}));
-    render(<Input handleCep={handleCep} />);
+    api.get.mockReturnValue(new Promise(() => {}))
+    render(<Input handleCep={handleCep} />)
 
     fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
       target: { value: '01001000' },
-    });
-    fireEvent.click(screen.getByRole('button'));
+    })
+    fireEvent.click(screen.getByRole('button'))
 
-    await waitFor(() =>
-      expect(screen.getByRole('button')).toBeDisabled()
-    );
-  });
+    await waitFor(() => expect(screen.getByRole('button')).toBeDisabled())
+  })
 
   it('triggers search when Enter is pressed in the input', async () => {
-    api.get.mockResolvedValue({ data: validData });
-    render(<Input handleCep={handleCep} />);
+    api.get.mockResolvedValue({ data: validData })
+    render(<Input handleCep={handleCep} />)
 
     fireEvent.change(screen.getByPlaceholderText('Digite o CEP...'), {
       target: { value: '01001000' },
-    });
+    })
     fireEvent.keyDown(screen.getByPlaceholderText('Digite o CEP...'), {
       key: 'Enter',
-    });
+    })
 
-    await waitFor(() =>
-      expect(handleCep).toHaveBeenCalledWith(validData)
-    );
-  });
-});
+    await waitFor(() => expect(handleCep).toHaveBeenCalledWith(validData))
+  })
+})

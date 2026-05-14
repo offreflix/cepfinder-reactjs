@@ -6,7 +6,7 @@ import Main from './components/Main';
 import Container from './components/Container';
 
 function App() {
-  const [cep, setCep] = useState({});
+  const [cep, setCep] = useState(null);
 
   function handleCep(input) {
     setCep(input);

@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 function Main(props) {
   return (
     <Fragment>
-      {Object.keys(props.cep).length > 1 && (
+      {props.cep !== null && (
         <main className="main">
           <h2>CEP: {props.cep.cep}</h2>
 
