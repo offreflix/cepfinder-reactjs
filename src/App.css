@@ -33,7 +33,11 @@
   content: '';
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, rgba(10, 9, 7, 0.72) 100%);
+  background: radial-gradient(
+    ellipse 80% 70% at 50% 50%,
+    transparent 40%,
+    rgba(10, 9, 7, 0.72) 100%
+  );
   pointer-events: none;
   z-index: 0;
 }
@@ -145,7 +149,9 @@
   border: 1px solid var(--border);
   border-radius: 2px;
   padding: 0 0 0 1.1rem;
-  transition: border-color 0.25s, box-shadow 0.25s;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
   position: relative;
 }
 
@@ -176,7 +182,9 @@
 
 .containerInput:focus-within {
   border-color: var(--gold-dim);
-  box-shadow: 0 0 0 1px var(--gold-dim), 0 8px 28px rgba(200, 169, 110, 0.06);
+  box-shadow:
+    0 0 0 1px var(--gold-dim),
+    0 8px 28px rgba(200, 169, 110, 0.06);
 }
 
 .containerInput input {
@@ -209,7 +217,9 @@
   justify-content: center;
   cursor: pointer;
   color: var(--gold);
-  transition: color 0.2s, background-color 0.2s;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
   align-self: stretch;
 }
 
@@ -245,8 +255,12 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinIcon {
